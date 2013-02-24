@@ -7,10 +7,6 @@ def self.get_or_post(url, &block)
   post(url, &block)
 end
 
-def self.check_method(method)
-  Eviapi.respond_to? method
-end
-
 def paramToEviapiMethod(method)
   if method.downcase.match(/argos\//)
     method.downcase.gsub!(/\./, '_').gsub!(/argos\//, '')
@@ -23,13 +19,17 @@ not_found do
   "NOPE! 404"
 end
 
-get_or_post '/awv' do 
+get_or_post '/awv' do
+  redirect "/awv/"
+end
+
+get_or_post '/awv/' do 
   # my public folder is just a softlink that points elsewhere on my harddrive
-  send_file('./public/index.html')
+  send_file('./public/awv/index.html')
 end
 
 get_or_post '/mw/*' do
-  method_name   = paramToEviapiMethod(params[:splat][0])
+  method_name   = paramToEviapiMethod(params[:splat].first)
   method_params = params.reject{ |key, value| key == 'splat' || key == 'captures' }
   client        = Eviapi.client
   client.cookie = request.cookies.map{ |key, value| "#{key}=#{value}"}.join(';')
