@@ -24,7 +24,7 @@ not_found do
 end
 
 get_or_post '/awv' do 
-  # my public folder is just a 
+  # my public folder is just a softlink that points elsewhere on my harddrive
   send_file('./public/index.html')
 end
 
