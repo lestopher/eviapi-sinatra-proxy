@@ -6,4 +6,13 @@ It's useful to use the public folder as a softlink and serve up the AWV project 
 
 How To Use
 ==========
+Make sure that you have the following gems installed: Sinatra, Thin, Eviapi
+
+    gem install sinatra
+    gem install thin
+
+You can only install eviapi if you have access to that [repo](https://github.com/lestopher/eviapi.git)
+
+To run the proxy:
+
     ruby proxy.rb
