@@ -1,6 +1,12 @@
+#!/usr/bin/env ruby
+
 require 'sinatra'
 require 'thin'
 require 'eviapi'
+
+if ARGV.length > 0
+  $ENDPOINT = ARGV.first
+end
 
 def self.get_or_post(url, &block)
   get(url, &block)
@@ -20,7 +26,7 @@ not_found do
 end
 
 get_or_post '/awv' do
-  redirect "/awv/"
+  redirect "/awv/", 301
 end
 
 get_or_post '/awv/' do 
@@ -29,10 +35,11 @@ get_or_post '/awv/' do
 end
 
 get_or_post '/mw/*' do
-  method_name   = paramToEviapiMethod(params[:splat].first)
-  method_params = params.reject{ |key, value| key == 'splat' || key == 'captures' }
-  client        = Eviapi.client
-  client.cookie = request.cookies.map{ |key, value| "#{key}=#{value}"}.join(';')
+  method_name     = paramToEviapiMethod(params[:splat].first)
+  method_params   = params.reject{ |key, value| key == 'splat' || key == 'captures' }
+  client          = Eviapi.client
+  client.cookie   = request.cookies.map{ |key, value| "#{key}=#{value}"}.join(';')
+  client.endpoint = $ENDPOINT unless $ENDPOINT.nil?
 
   if method_name != nil and client.respond_to? method_name
     response = client.send(method_name, method_params)
