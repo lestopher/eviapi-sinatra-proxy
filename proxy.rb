@@ -6,7 +6,9 @@ require 'eviapi'
 
 if ARGV.length > 0
   $ENDPOINT = ARGV.first
+  $ENDPOINT + "/" unless $ENDPOINT.match(/\/$/)
 end
+
 
 def self.get_or_post(url, &block)
   get(url, &block)
@@ -42,21 +44,19 @@ get_or_post '/mw/*' do
   client.endpoint = $ENDPOINT unless $ENDPOINT.nil?
 
   if method_name != nil and client.respond_to? method_name
-    response = client.send(method_name, method_params)
+    # Notice the true we're passing in, we're telling eviapi that we want raw values back, not the json values
+    response = client.send(method_name, method_params, true)
   end
 
   if response
-    header_options = {
-      "Cache-Control" => "no-cache", 
-      "Connection"    => "close",
-      "Content-Type"  => "application/json; charset=ISO-8859-1",
-      "Set-Cookie"    => client.cookie
-    }
-    
-    status 200
-    headers header_options
-    body response.to_json
+    response_headers = response.env[:response_headers]
 
+    # content-length is messed up for some reason, so we let sinatra handle it
+    response_headers.delete "content-length"
+
+    status  response.status
+    headers response_headers
+    body    response.body
   else
     puts 'response is nil'
     not_found
