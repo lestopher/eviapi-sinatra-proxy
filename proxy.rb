@@ -14,7 +14,7 @@ end
 
 # If we're actively developing against the local argosweb codebase,
 # need to make sure to always refresh the static files
-set :static_cache_control, [:public, :max_age => 1] unless ARGV.length > 1 and ARGV[1] == true
+set :static_cache_control, [:public, :max_age => 1] if ARGV.length > 1 and ARGV[1] == true
 
 def self.get_or_post(url, &block)
   get(url, &block)
