@@ -15,4 +15,6 @@ You can only install eviapi if you have access to that [repo](https://github.com
 
 To run the proxy:
 
-    ruby proxy.rb
+    ruby proxy.rb 'http://your-endpoint-here/' true
+
+There are a few options that you can pass in: the endpoint and a flag that tells the proxy if you want to reload the local codebase files everytime (avoid caching)

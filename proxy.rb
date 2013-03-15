@@ -33,13 +33,13 @@ not_found do
   "NOPE! 404"
 end
 
-get_or_post '/awv' do
-  redirect "/awv/", 301
+get_or_post %r{^/argosweb?$}i do
+  redirect request.url, 301
 end
 
-get_or_post '/awv/' do 
+get_or_post %r{^/argosweb/?$}i do 
   # my public folder is just a softlink that points elsewhere on my harddrive
-  send_file('./public/awv/index.html')
+  send_file('./public/ArgosWeb/index.html')
 end
 
 get_or_post '/mw/*' do
