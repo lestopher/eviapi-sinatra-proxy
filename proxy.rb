@@ -12,7 +12,7 @@ if ARGV.length > 0
   $ENDPOINT + "/" unless $ENDPOINT.match(/\/$/)
 end
 
-# If we're actively developing against the local argosweb codebase,
+# If we're actively developing against the local awv codebase,
 # need to make sure to always refresh the static files
 set :static_cache_control, [:public, :max_age => 1] if ARGV.length > 1 and ARGV[1] == true
 
@@ -33,13 +33,13 @@ not_found do
   "NOPE! 404"
 end
 
-get_or_post %r{^/argosweb?$}i do
-  redirect request.url, 301
+get_or_post %r{^/awv?$}i do
+  redirect "#{request.url}/", 301
 end
 
-get_or_post %r{^/argosweb/?$}i do 
+get_or_post %r{^/awv/?$}i do 
   # my public folder is just a softlink that points elsewhere on my harddrive
-  send_file('./public/ArgosWeb/index.html')
+  send_file('./public/awv/index.html')
 end
 
 get_or_post '/mw/*' do
