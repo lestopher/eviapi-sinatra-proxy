@@ -1,4 +1,4 @@
-require 'sinatra'
+require 'sinatra/base'
 require 'thin'
 require 'eviapi'
 
@@ -15,15 +15,19 @@ class SinProxy < Sinatra::Base
     @endpoint = val.match(/\/$/) ? val : val + "/"
   end
 
-  set :public_folder, File.dirname('../public/')
-  set :static, true
+  configure :production, :development do
+    enable :logging
+    enable :static
+  end
+
+  set :root, File.dirname(__FILE__) + '/../'
+  # Shouldn't need to set public folder explicitly
+  # set :public_folder, File.dirname('/Users/christophernguyen/Sites/eviapi-sinatra-proxy/public')
+  set :show_exceptions, true
   # If we're actively developing against the local awv codebase,
   # need to make sure to always refresh the static files
   set :static_cache_control, [:public, :max_age => 1] #if ARGV.length > 1 and ARGV[1] == true
 
-  configure :production, :development do
-    enable :logging
-  end
 
   def self.get_or_post(url, &block)
     get(url, &block)
@@ -42,7 +46,11 @@ class SinProxy < Sinatra::Base
     "NOPE! 404"
   end
 
-  get_or_post %r{^/argosweb?$}i do
+  get_or_post '/debuginfo' do
+    "root is set to " + settings.root + "<br />" + "public is set to " + settings.public_folder + "<br/>" + "endpoint is #{SinProxy::endpoint}"
+  end
+
+  get_or_post %r{^/awv?$}i do
     redirect "#{request.url}/", 301
   end
 
@@ -54,9 +62,9 @@ class SinProxy < Sinatra::Base
     redirect "#{request.url}/", 301
   end
 
-  get_or_post %r{^/argosweb/?$}i do 
+  get_or_post %r{^/awv/?$}i do 
     # my public folder is just a softlink that points elsewhere on my harddrive
-    send_file('./public/ArgosWeb/index.html')
+    send_file('./public/awv/index.html')
   end
 
   get_or_post %r{^/lw/?$}i do 
@@ -71,10 +79,10 @@ class SinProxy < Sinatra::Base
 
   get_or_post '/mw/*' do
     method_name     = paramToEviapiMethod(params[:splat].first)
-    method_params   = params.reject{ |key, value| key == 'splat' || key == 'captures' }
-    client          = Eviapi.client
-    client.cookie   = request.cookies.map{ |key, value| "#{key}=#{value}"}.join(';')
-    client.endpoint = :endpoint unless :endpoint.nil?
+    method_params  = params.reject{ |key, value| key == 'splat' || key == 'captures' }
+    client                  = Eviapi.client
+    client.cookie        = request.cookies.map{ |key, value| "#{key}=#{value}"}.join(';')
+    client.endpoint     = SinProxy::endpoint unless SinProxy::endpoint.nil?
 
     if method_name != nil and client.respond_to? method_name
       # Notice the true we're passing in, we're telling eviapi that we want raw values back, not the json values

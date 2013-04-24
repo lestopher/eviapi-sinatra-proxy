@@ -24,3 +24,5 @@ public/
 # Let people use their own certs, don't commit
 ssl
 ssl/
+
+.DS_Store
