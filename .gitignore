@@ -20,3 +20,7 @@ doc/
 # Don't commit stuff from public
 public
 public/
+
+# Let people use their own certs, don't commit
+ssl
+ssl/
