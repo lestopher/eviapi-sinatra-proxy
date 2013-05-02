@@ -18,6 +18,7 @@ class SinProxy < Sinatra::Base
   configure :production, :development do
     enable :logging
     enable :static
+    mime_type :csv, 'text/csv'
   end
 
   set :root, File.dirname(__FILE__) + '/../'
@@ -50,7 +51,11 @@ class SinProxy < Sinatra::Base
     "root is set to " + settings.root + "<br />" + "public is set to " + settings.public_folder + "<br/>" + "endpoint is #{SinProxy::endpoint}"
   end
 
-  get_or_post %r{^/awv?$}i do
+  get_or_post %r{^/argosweb?$}i do
+    redirect "#{request.url}/", 301
+  end
+
+  get_or_post %r{^/argosweb42?$}i do
     redirect "#{request.url}/", 301
   end
 
@@ -62,9 +67,14 @@ class SinProxy < Sinatra::Base
     redirect "#{request.url}/", 301
   end
 
-  get_or_post %r{^/awv/?$}i do 
+  get_or_post %r{^/argosweb/?$}i do 
     # my public folder is just a softlink that points elsewhere on my harddrive
-    send_file('./public/awv/index.html')
+    send_file('./public/argosweb/index.html')
+  end
+
+  get_or_post %r{^/argosweb42/?$}i do 
+    # my public folder is just a softlink that points elsewhere on my harddrive
+    send_file('./public/argosweb42/index.html')
   end
 
   get_or_post %r{^/lw/?$}i do 
@@ -102,5 +112,10 @@ class SinProxy < Sinatra::Base
       puts 'response is nil'
       not_found
     end
+  end
+
+  get_or_post '/ReportFiles/*' do
+    # Something like https://evidevjs1.evisions.com/ReportFiles/1234/report.pdf
+    send_file SinProxy::endpoint + "ReportFiles/#{params[:captures].first}"
   end
 end
