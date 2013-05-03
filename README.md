@@ -13,8 +13,12 @@ Make sure that you have the following gems installed: Sinatra, Thin, Eviapi
 
 You can only install eviapi if you have access to that [repo](https://github.com/lestopher/eviapi.git)
 
+Make sure the following folders exist (as real folders, not softlinks): **public, ssl**
+
+In public, you can create softlinks to your codebase. In ssl, drop in your cer and key files.
+
 To run the proxy:
 
-    ruby proxy.rb 'http://your-endpoint-here/' true
+    ruby proxy.rb 'http://your-endpoint-here/' 
 
-There are a few options that you can pass in: the endpoint and a flag that tells the proxy if you want to reload the local codebase files everytime (avoid caching)
+There are a few options that you can pass in: the endpoint and a port that tells the proxy what port you want it bound to (in case you want to have multiple proxies running) 
