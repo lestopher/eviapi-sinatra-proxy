@@ -6,19 +6,23 @@ It's useful to use the public folder as a softlink and serve up the AWV project 
 
 How To Use
 ==========
-Make sure that you have the following gems installed: Sinatra, Thin, Eviapi
+Make sure you get the dependencies:
 
-    gem install sinatra
-    gem install thin
+    bundle install
 
-You can only install eviapi if you have access to that [repo](https://github.com/lestopher/eviapi.git)
 
-Make sure the following folders exist (as real folders, not softlinks): **public, ssl**
+You can only install eviapi if you have access to that [repo](https://github.com/lestopher/eviapi.git).
+It will prompt you to authenticate if you don't have an ssh key.
 
-In public, you can create softlinks to your codebase. In ssl, drop in your cer and key files.
+Make sure the following folders exist (as real folders, not softlinks): **ssl**
+
+Public can be a softlink, or be a real folder with softlinks in it. In ssl, drop in your cer and key files.
 
 To run the proxy:
 
-    ruby proxy.rb 'http://your-endpoint-here/' 
+    bundle exec ruby proxy.rb -e 'http://your-endpoint-here/' -p 6443
 
-There are a few options that you can pass in: the endpoint and a port that tells the proxy what port you want it bound to (in case you want to have multiple proxies running) 
+Options for using a redis cache:
+--use-redis => bool(true/false)
+--redis (-r) => string(hostname) // Make sure you don't include any schemes like http or such
+--redis-port (-d) => integer(6379)

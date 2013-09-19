@@ -1,8 +1,25 @@
+GIT
+  remote: https://github.com/lestopher/eviapi.git
+  revision: 5717011cf3a09caa5593194629145ca64914de65
+  specs:
+    eviapi (0.9.4)
+      faraday
+      faraday_middleware
+      hashie
+      json
+
 GEM
   remote: http://rubygems.org/
   specs:
     daemons (1.1.9)
     eventmachine (1.0.3-x86-mingw32)
+    faraday (0.8.8)
+      multipart-post (~> 1.2.0)
+    faraday_middleware (0.9.0)
+      faraday (>= 0.7.4, < 0.9)
+    hashie (2.0.5)
+    json (1.8.0)
+    multipart-post (1.2.0)
     rack (1.5.2)
     rack-protection (1.5.0)
       rack
@@ -22,6 +39,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  eviapi!
   redis
   sinatra (= 1.4.3)
   thin (= 1.5.1)
