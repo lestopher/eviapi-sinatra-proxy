@@ -26,3 +26,4 @@ ssl
 ssl/
 
 .DS_Store
+*~
