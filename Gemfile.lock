@@ -2,11 +2,11 @@ GEM
   remote: http://rubygems.org/
   specs:
     daemons (1.1.9)
-    eventmachine (1.0.3)
     eventmachine (1.0.3-x86-mingw32)
     rack (1.5.2)
     rack-protection (1.5.0)
       rack
+    redis (3.0.4)
     sinatra (1.4.3)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -22,6 +22,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  redis
   sinatra (= 1.4.3)
   thin (= 1.5.1)
   trollop
